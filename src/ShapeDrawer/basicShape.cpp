@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdint>
+#include <SFML/System/Angle.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -19,8 +20,10 @@ sf::Vector2f CircleGenerator::get_point(uint32_t i, float theta) {
 }
 
 void generateRoundedRect(sf::VertexArray& arr, sf::Vector2f position, float height, float width, uint32_t quality, float theta, float range, sf::Color color) {
-  float arch;
   CircleGenerator generator{range, quality};
+  height -= range;
+  width -= range;
+
 
   
 }
