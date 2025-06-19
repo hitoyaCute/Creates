@@ -13,6 +13,8 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
-target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set(SFML_LIBS sfml-graphics sfml-window sfml-system)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics)
