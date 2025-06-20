@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
@@ -21,19 +22,30 @@ struct Obj {
   // of the  object would be relative to the origin
   sf::VertexArray shape;
   
-  // var the state of each nodes
+  // IO nodes
   std::vector<bool> &interface_node;
+  
   
   // function that change the state of its interface nodes
   // and perform a execution step on the logic inside
-  virtual std::vector<bool>& step(int step_size = 1) = 0;
+  virtual void step(std::vector<uint64_t>& local_nodes, std::vector<uint64_t>& external_nodes, int step_size = 1) = 0;
+  Obj();
 };
 
 
 struct Gate : public Obj {
   
-  std::vector<bool>& step(int step_size); 
+  std::vector<bool>& step(int step_size);
+  Gate();
+private:
+  std::vector<bool> states;
+  
+  
 };
+
+
+
+
 
 
 

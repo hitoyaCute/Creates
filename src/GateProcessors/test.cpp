@@ -1,50 +1,46 @@
-#include "objects.hpp"
 #include <iostream>
 #include <vector>
+#include <SFML/Graphics/VertexArray.hpp>
 
 
 
-std::vector<bool>& Circuit::step(int step_size) {
-  for (int i = 0; i < step_size; i++) {
+
+struct Obj {
+
+  // what kind of Object is it
+  // either logic gate, device
+  // or ic
+  int type;
+  
+  // origin x
+  float posx;
+  // origin y
+  float posy;
+
+  // var that holds the vector on what the shape
+  // of the  object would be relative to the origin
+  sf::VertexArray shape;
+  
+  // IO nodes
+  std::vector<bool> &interface_node;
+  
+  
+  // function that change the state of its interface nodes
+  // and perform a execution step on the logic inside
+  virtual void step(std::vector<bool>& local_nodes, std::vector<bool>& external_nodes, int step_size = 1) = 0;
+  Obj();
+};
+
+
+struct Gate : public Obj {
+  
+  std::vector<bool>& step(int step_size);
+  Gate();
+  void step(std::vector<bool> &local_nodes, std::vector<bool> &external_nodes, int step_size = 1) {
     
   }
-
-  return interface_node;
-}
-
-
-
-
-
-
-
-
-
-
-void test() {
-  
-  Circuit dat;
-
-}
-
-// attemp 3
-struct process_type {
-  // what type of gate is it
-  std::vector<int> type;
-  
-  // containes the NODE id of each gates
-  std::vector<std::vector<int>> nodes;
-  
-  // current state of each gates
+private:
   std::vector<bool> states;
+  
 };
-
-
-struct process_group {
-  std::vector<process_type> groups;
-};
-
-
-
-
 
