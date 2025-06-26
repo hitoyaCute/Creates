@@ -4,6 +4,15 @@
 #include <vector>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
+
+
+/* this holds the circuits and operations*/
+struct Circuits {
+  
+}; 
+
+
+
 // the Object that can hold internal state and have internal process
 // used on both IC and logic gates
 struct Obj {
@@ -11,41 +20,51 @@ struct Obj {
   // what kind of Object is it
   // either logic gate, device
   // or ic
-  int type;
+  const uint32_t type;
   
   // origin x
   float posx;
   // origin y
   float posy;
-
-  // var that holds the vector on what the shape
-  // of the  object would be relative to the origin
-  sf::VertexArray shape;
   
-  // IO nodes
-  std::vector<bool> &interface_node;
+  // nodes the object will be readiing
+  std::vector<bool> input_node;
+  // nodes that the object will change
+  std::vector<bool> *output_node;
   
-  
+  Obj(int type_);
   // function that change the state of its interface nodes
   // and perform a execution step on the logic inside
-  virtual void step(std::vector<uint64_t>& local_nodes, std::vector<uint64_t>& external_nodes, int step_size = 1) = 0;
-  Obj();
+  virtual void step(int step_size = 1) = 0;
+  // take a node and put it on output node array
+  virtual void connect(bool *outp) = 0;
+};
+
+/* basic gates
+ * 0 not
+ * 1 buffer
+ * 2 and
+ * 3 nand
+ * 4 or
+ * 5 nor
+ * 6 xor
+ * 7 xnor
+ * 8+ = Invalid component*/
+struct Gate : public Obj {
+  Gate(int type_);
+  void step(int step_size);
+  void connect(bool *outp);
+private:
+  bool state;
 };
 
 
-struct Gate : public Obj {
-  
-  std::vector<bool>& step(int step_size);
-  Gate();
+// aka IC
+struct Circuit {
+  Circuit(int type_);
+  void step(int step_size);
+  void connect(bool *outp);
 private:
   std::vector<bool> states;
-  
-  
 };
-
-
-
-
-
-
 
