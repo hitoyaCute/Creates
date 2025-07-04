@@ -37,12 +37,13 @@ void generateRoundedRect(sf::VertexArray& arr,
   };
 
 
-  for (uint32_t i{0}; i < (quality); i++) {
+  for (uint32_t i{0}; i < quality; i++) {
     const auto point{
       [&]()-> const sf::Vector2f {
         const uint32_t corner_idx{i / (quality/4)};
         return centers[corner_idx] + generator.get_point(i);
     }()};
+
     arr[i].position = position + point;
 
     arr[i].color = color;
