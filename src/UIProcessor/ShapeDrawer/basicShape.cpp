@@ -13,14 +13,21 @@ CircleGenerator::CircleGenerator(float radius_, uint32_t quality_) :
   quality{quality_},
   da{(2.0f * sf::priv::pi) / quality} {};
 
-sf::Vector2f CircleGenerator::get_point(uint32_t i, float theta) {
+sf::Vector2f CircleGenerator::get_point(uint32_t i) {
   float angle = da * static_cast<float>(i);
-  return {radius * sf::Vector2f{cosf(angle+theta), sinf(angle+theta)}};
+  return {radius * sf::Vector2f{cosf(angle), sinf(angle)}};
 }
 
 // function that pupulate a predefined vertex array with rounded rectangle
-void generateRoundedRect(sf::VertexArray& arr, sf::Vector2f position, float height, float width, uint32_t quality, float theta, float radius, sf::Color color) {
-  CircleGenerator generator{radius, quality * 4};
+// please!!! dont make the radius larger than {width, height}/2
+void generateRoundedRect(sf::VertexArray& arr,
+                         uint32_t quality,
+                         sf::Vector2f position,
+                         float height,
+                         float width,
+                         float radius,
+                         sf::Color color) {
+  CircleGenerator generator{radius, quality};
     
   const sf::Vector2f centers[4]{
     {width - radius, height - radius},
@@ -30,22 +37,26 @@ void generateRoundedRect(sf::VertexArray& arr, sf::Vector2f position, float heig
   };
 
 
-  for (uint32_t i{0}; i < (quality * 4); i++) {
-    const sf::Vector2f point{
+  for (uint32_t i{0}; i < (quality); i++) {
+    const auto point{
       [&]()-> const sf::Vector2f {
-      const uint32_t corner_idx{i / quality*4};
-      return centers[corner_idx] + generator.get_point(i - corner_idx, theta);
+        const uint32_t corner_idx{i / (quality/4)};
+        return centers[corner_idx] + generator.get_point(i);
     }()};
-    arr[i/4].position = position + point;
+    arr[i].position = position + point;
 
-    arr[i/4].color = color;
+    arr[i].color = color;
   }
 }
 // populate a vertex array with circle
-void generateCircle(sf::VertexArray &arr, sf::Vector2f position, float radius, uint32_t quality, float theta, sf::Color color) {
+void generateCircle(sf::VertexArray &arr,
+                    uint32_t quality,
+                    sf::Vector2f position,
+                    float radius,
+                    sf::Color color) {
   CircleGenerator generator{radius, quality};
   for (uint32_t i{0}; i < quality; i++) {
-    arr[i].position = position + generator.get_point(i, theta);
+    arr[i].position = position + generator.get_point(i);
 
     arr[i].color = color;
   }

@@ -17,11 +17,11 @@ custom component will be stored on a vector containing the
 256 and up - custom component
 
 
-all gates will be grouped by process group
-and each gates on that process group will be grouped on process type
 
 
-
-
-
-
+- the process will start on initiations, defining objs, and initiating objects
+- then pre-evaluate the circuit objs to make sure loops, and circuit that has long internal delay
+will finish before execution along with processing the routs
+- followed by starting the process loop
+- start processing each objs (gates, IC, devices, etc)
+- if the user do some editing, re calculate the routes

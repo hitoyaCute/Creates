@@ -6,13 +6,6 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 
 
-/* this holds the circuits and operations*/
-struct Circuits {
-  
-}; 
-
-
-
 // the Object that can hold internal state and have internal process
 // used on both IC and logic gates
 struct Obj {
@@ -34,11 +27,12 @@ struct Obj {
   
   Obj(int type_);
   // function that change the state of its interface nodes
-  // and perform a execution step on the logic inside
+  // and perform evaluation step on the logic inside
   virtual void step(int step_size = 1) = 0;
   // take a node and put it on output node array
-  virtual void connect(bool *outp) = 0;
+  virtual void connect(bool &outp) = 0;
 };
+
 
 /* basic gates
  * 0 not
@@ -59,12 +53,43 @@ private:
 };
 
 
+
 // aka IC
 struct Circuit {
   Circuit(int type_);
+  /*internally calls the Circuit::evaluate_curcuit*/
   void step(int step_size);
-  void connect(bool *outp);
+  void connect(bool &outp);
 private:
   std::vector<bool> states;
 };
+
+/* this holds the circuits and
+ * dictate operations*/
+struct Circuits {
+  void create_curcuit_type(std::vector<Gate> operations);
+  /* creates a circuit
+   * parameters:
+   *    initialize - perform a step  evaluation untill thers no object updating
+   *      or the object exhaust the eval step lim
+   *    eval_step_limit - defines the limit on how much to wait for the circuit
+   *      to settle on a stable state*/
+  Circuit* make_circuit(int type, bool initialize = false, int eval_step_limit = 10);
+  /* take the circuit, look on its type, search on what type it is, use the internal state
+   * evaluate the curcuit using the states, type and nodes
+  */
+  void evaluate_curcuit(Circuit &circuit);
+
+
+private:
+  std::vector<Obj> objs;
+  
+};
+
+
+
+
+
+
+
 
