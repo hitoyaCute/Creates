@@ -1,17 +1,20 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Err.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <string>
+#include <system_error>
 
 #include "UIProcessor/Events/KeyEvents.hpp"
 #include "UIProcessor/ShapeDrawer/Shapes.hpp"
 
 int main() {
+  data::start();
   
   data::mousePos = {0,0};
 
@@ -26,15 +29,17 @@ int main() {
   sf::Text y_{font};
   sf::Text x_{font};
 
+
+  uint32_t quality = 40*4;
+  sf::VertexArray circle{sf::PrimitiveType::TriangleFan, quality};
+  sf::VertexArray c(sf::PrimitiveType::TriangleFan, quality/4);
+
   while (window.isOpen()) {
 
     window.clear();
     processEvents(window);
 
-    uint32_t quality = 40*4;
-    sf::VertexArray circle{sf::PrimitiveType::TriangleFan, quality};
-    sf::VertexArray c(sf::PrimitiveType::TriangleFan, quality/4);
-    
+        
     sf::Vector2u size = window.getSize();
     
     
@@ -44,12 +49,15 @@ int main() {
     x_.setString(std::to_string(data::mousePos.x));
     x_.setPosition({size.y*0.1f,30.f});
     
+    try {
     generateRoundedRect(circle, quality, {1.f,size.y*0.15f}, size.y*0.15f, size.x, ((size.x+size.y)/2.0f)*0.05f,
                         color);
     generateRoundedRect(c, quality, static_cast<sf::Vector2f>(data::mousePos),
                         size.y*0.01f, size.x*0.01f,
       ((size.x+size.y)/2.0f)*0.05f);
-
+    } catch (std::error_code) {
+      throw std::error_code();
+    }
     window.draw(circle);
     window.draw(y_);
     window.draw(x_);
