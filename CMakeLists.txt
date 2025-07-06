@@ -22,15 +22,13 @@ FetchContent_MakeAvailable(SFML)
 add_executable(${PROJECT_NAME}
   ./src/main.cpp
   ./src/UIProcessor/ShapeDrawer/basicShape.cpp
-  ./src/UIProcessor/Events/TempName.cpp)
-  # ./src/UIProcessor/Events/KeyEvents.hpp)
+  ./src/UIProcessor/Events/EventProcessor.cpp)
 
 add_compile_options(-std-c++17)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
-target_include_directories(${PROJECT_NAME} PRIVATE "src")
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/include")
 
 
 set(SFML_LIBS sfml-graphics sfml-window sfml-system)
