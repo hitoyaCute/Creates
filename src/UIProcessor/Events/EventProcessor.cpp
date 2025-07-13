@@ -2,12 +2,15 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <cstdint>
 #include <iostream>
 #include <optional>
 
 
 sf::Vector2i data::mousePos = {0,0};
 char data::lastPressed = '_';
+uint8_t data::t = 0;
+uint8_t data::d = 0;
 
 void processEvents(sf::Window &window) {
   while (const std::optional event = window.pollEvent()) {
@@ -20,11 +23,20 @@ void processEvents(sf::Window &window) {
         window.close();
       } else {
         data::lastPressed = (char)key->code;
-        std::cout << (char)key->code << std::endl;
+      };
+      if (key->code == sf::Keyboard::Key::W) {
+        data::t ++;
+      } else if (key->code == sf::Keyboard::Key::S) {
+        data::t --;
+      };
+      if (key->code == sf::Keyboard::Key::A) {
+        data::d ++;
+      } else if (key->code == sf::Keyboard::Key::D) {
+        data::d --;
       }
     }
 
-    if (const auto* mouse = event->getIf<sf::Event                ::MouseMoved>()) {
+    if (const auto* mouse = event->getIf<sf::Event::MouseMoved>()) {
       data::mousePos = mouse->position;
     }
   }

@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/Graphics/PrimitiveType.hpp>
 
 enum struct Obj {
   Gate,
@@ -60,7 +58,7 @@ struct Circuit {
   // nodes the object will be readiing
   std::vector<bool> input_node;
   // nodes that the object will change
-  std::vector<bool> *output_node;
+  std::vector<bool> &output_node;
 
   Circuit(int type_);
   /*internally calls the Circuit::evaluate_curcuit*/
