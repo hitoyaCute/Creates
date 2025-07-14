@@ -1,9 +1,8 @@
-#include "UIProcessor/Events/EventProcessor.hpp"
+#include "EventProcessor.hpp"
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdint>
-#include <iostream>
 #include <optional>
 
 

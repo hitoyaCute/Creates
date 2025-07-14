@@ -20,9 +20,10 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(${PROJECT_NAME}
-  ./src/main.cpp
-  ./src/UIProcessor/ShapeDrawer/basicShape.cpp
-  ./src/UIProcessor/Events/EventProcessor.cpp)
+  ./src/app/main.cpp
+  ./src/ui/shapes/basicShape.cpp
+  ./src/ui/events/EventProcessor.cpp
+  ./src/gate/Gates.cpp)
 
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)

@@ -7,7 +7,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <stdexcept>
-#include "UIProcessor/ShapeDrawer/Shapes.hpp"
+#include "Shapes.hpp"
 
 
 

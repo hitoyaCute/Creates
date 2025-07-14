@@ -10,4 +10,24 @@ user interface
 improving the todo list and read me file     -          optimizing  
 
 
+Creates
+└── src
+    ├── app
+    │   └── main.cpp
+    ├── gate
+    │   ├── GateInstance.cpp
+    │   ├── objects.hpp
+    │   ├── Process.md
+    │   └── test.cpp
+    └── ui
+        ├── components
+        │   ├──
+        ├── events
+        │   ├── EventProcessor.cpp
+        │   └── EventProcessor.hpp
+        ├── shapes
+        │   ├── basicShape.cpp
+        │   ├── ComponentDrawer.cpp
+        │   └── Shapes.hpp
+        └── WindowManager.cpp
 
