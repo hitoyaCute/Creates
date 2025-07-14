@@ -3,30 +3,30 @@
 #include <string>
 #include <cstdint>
 #include <unistd.h>
-// #include <SFML/Graphics.hpp>
-// #include <SFML/System/Err.hpp>
-// #include <SFML/System/Time.hpp>
-// #include <SFML/System/Sleep.hpp>
-// #include <SFML/Graphics/Text.hpp>
-// #include <SFML/Graphics/Font.hpp>
-// #include <SFML/Graphics/Color.hpp>
-// #include <SFML/Graphics/Shape.hpp>
-// #include <SFML/System/Vector2.hpp>
-// #include <SFML/Window/VideoMode.hpp>
-// #include <SFML/Window/WindowEnums.hpp>
-// #include <SFML/Graphics/VertexArray.hpp>
-// #include <SFML/Graphics/PrimitiveType.hpp>
-// #include <SFML/Graphics/CoordinateType.hpp>
-// #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Err.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Sleep.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Shape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/WindowEnums.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/CoordinateType.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
-// #include "ui/shapes/Shapes.hpp"
-// #include "ui/events/EventProcessor.hpp"
+#include "ui/shapes/Shapes.hpp"
+#include "ui/events/EventProcessor.hpp"
 #include "gate/Gates.hpp"
 
 int main (int argc, char *argv[]) {
-  bool A = false;
-  bool B = false;
-  bool C = false;
+  bool* A = new bool {true};
+  bool* B = new bool {false};
+  bool* C = new bool {false};
 
   BasicGate and0{3};
   BasicGate and1{3};
@@ -34,22 +34,27 @@ int main (int argc, char *argv[]) {
   BasicGate xor1{7};
   BasicGate or0{5};
 
-  or0.connect(*and0.getOutpNode(), 2);
-  or0.connect(*and1.getOutpNode(), 1);
-
   xor0.connect(A, 1);
   xor0.connect(B, 2);
+  xor0.process();
 
   and0.connect(B, 2);
   and0.connect(A, 1);
+  and0.process();
 
-  and1.connect(*xor0.getOutpNode(), 1);
+  and1.connect(xor0.getOutpNode(), 1);
   and1.connect(C, 2);
+  and1.process();
+  
+  or0.connect(and0.getOutpNode(), 2);
+  or0.connect(and1.getOutpNode(), 1);
+  or0.process();
 
-  xor1.connect(*xor0.getOutpNode(), 1);
+  xor1.connect(xor0.getOutpNode(), 1);
   xor1.connect(C, 2);
+  xor1.process();
 
-  std::cout << "input: " << A << " ," << B << " ," << C << "  output: " <<
+  std::cout << "input: " << *A << " ," << *B << " ," << *C << "  output: " <<
     *xor1.getOutpNode() << " ," << *or0.getOutpNode() << std::endl;
 
   return 0;

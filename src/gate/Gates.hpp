@@ -14,7 +14,7 @@ struct BasicGate {
   // \ \ \ \ uint8_t index - where it will be attach
   //
   // void connect(bool &node, uint8_t index)
-  void connect(bool &node, uint8_t index);
+  void connect(bool *node, uint8_t index);
   
   // get type
   uint8_t getType();

@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include "Gates.hpp"
@@ -8,11 +9,11 @@ BasicGate::BasicGate (uint8_t type_):
   nodes(BasicGateType::nodeAmount[type_]),
   type{type_} {
   if (type_ != 0){
-    *nodes[0] = BasicGateType::defaultState[type_];
+    nodes[0] = new bool{BasicGateType::defaultState[type_]};
   }
 };
-void BasicGate::connect(bool &node, uint8_t index) {
-  *nodes[index] = node;
+void BasicGate::connect(bool *node, uint8_t index) {
+  nodes[index] = node;
 }; 
 
 uint8_t BasicGate::getType() {
