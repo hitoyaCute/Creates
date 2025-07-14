@@ -25,8 +25,8 @@
 
 int main (int argc, char *argv[]) {
   bool* A = new bool {true};
-  bool* B = new bool {false};
-  bool* C = new bool {false};
+  bool* B = new bool {true};
+  bool* C = new bool {true};
 
   BasicGate and0{3};
   BasicGate and1{3};
