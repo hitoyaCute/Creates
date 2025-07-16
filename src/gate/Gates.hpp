@@ -30,6 +30,8 @@ private:
 
   // nodes reference on what the gate will use
   std::vector<bool*> nodes;
+  // buffer reference on what the gate's current state
+  bool* buffer;
 
 };
 
