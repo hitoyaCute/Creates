@@ -18,12 +18,12 @@ FetchContent_Declare(SFML
     GIT_SHALLOW ON
     EXCLUDE_FROM_ALL
     SYSTEM)
-# FetchContent_MakeAvailable(SFML)
+FetchContent_MakeAvailable(SFML)
 
 add_executable(${PROJECT_NAME}
   ./src/app/main.cpp
-  # ./src/ui/shapes/basicShape.cpp
-  # ./src/ui/events/EventProcessor.cpp
+  ./src/ui/shapes/basicShape.cpp
+  ./src/ui/events/EventProcessor.cpp
   ./src/gate/Gates.cpp)
 
 
@@ -32,8 +32,8 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
 
-# set(SFML_LIBS sfml-graphics sfml-window sfml-system)
-# target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
-# target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics)
+set(SFML_LIBS sfml-graphics sfml-window sfml-system)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE SFML::Graphics)
 
 

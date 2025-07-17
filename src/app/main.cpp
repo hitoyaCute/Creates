@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <unistd.h>
-// #include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 // #include <SFML/System/Err.hpp>
 // #include <SFML/System/Time.hpp>
 // #include <SFML/System/Sleep.hpp>
@@ -21,6 +21,7 @@
 
 // #include "ui/shapes/Shapes.hpp"
 // #include "ui/events/EventProcessor.hpp"
+#include "gate/Components.hpp"
 #include "gate/Gates.hpp"
 
 int main (int argc, char *argv[]) {
@@ -61,6 +62,13 @@ int main (int argc, char *argv[]) {
     // std::cout << "   and0: " << *and0.getOutpNode() << " and1: " << *and1.getOutpNode() <<
     // " xor1: " << *xor0.getOutpNode() << " or0: " << *or0.getOutpNode() << " xor1: " << *xor1.getOutpNode() << std::endl;
   }
+  
+  // int id = Circuits::createCircuit("adder_1b");
+  // Circuits::types[id];
+  
+  
+  
+
   return 0;
 }
 
