@@ -33,7 +33,6 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
-add_compile_options(-g)
 
 set(SFML_LIBS sfml-graphics sfml-window sfml-system)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
