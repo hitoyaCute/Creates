@@ -42,7 +42,7 @@ void BasicGate::process() {
     case 8: {*buffer = *nodes[1] == *nodes[2];break;} // xnor
     default: {throw std::runtime_error(std::to_string(type) + " is not a valid gate type");break;}
   }} catch (const std::error_code err) {
-    throw std::runtime_error("Segmentation fault (Core dumped): probably theres no ");
+    throw std::runtime_error("Segmentation fault (Core dumped): probably theres no nodes");
   }
 
 }

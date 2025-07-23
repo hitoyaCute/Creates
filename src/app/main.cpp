@@ -4,23 +4,23 @@
 #include <cstdint>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-// #include <SFML/System/Err.hpp>
-// #include <SFML/System/Time.hpp>
-// #include <SFML/System/Sleep.hpp>
-// #include <SFML/Graphics/Text.hpp>
-// #include <SFML/Graphics/Font.hpp>
-// #include <SFML/Graphics/Color.hpp>
-// #include <SFML/Graphics/Shape.hpp>
-// #include <SFML/System/Vector2.hpp>
-// #include <SFML/Window/VideoMode.hpp>
-// #include <SFML/Window/WindowEnums.hpp>
-// #include <SFML/Graphics/VertexArray.hpp>
-// #include <SFML/Graphics/PrimitiveType.hpp>
-// #include <SFML/Graphics/CoordinateType.hpp>
-// #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Err.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Sleep.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Shape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/WindowEnums.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/CoordinateType.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
-// #include "ui/shapes/Shapes.hpp"
-// #include "ui/events/EventProcessor.hpp"
+#include "ui/shapes/Shapes.hpp"
+#include "ui/events/EventProcessor.hpp"
 #include "gate/Components.hpp"
 #include "gate/Gates.hpp"
 
@@ -28,45 +28,72 @@ int main (int argc, char *argv[]) {
   bool* A = new bool {true};
   bool* B = new bool {true};
   bool* C = new bool {true};
-
-  BasicGate and0{3};
-  BasicGate and1{3};
-  BasicGate xor0{7};
-  BasicGate xor1{7};
-  BasicGate or0{5};
   
-  xor0.connect(A, 1);
-  xor0.connect(B, 2);
-
-  and0.connect(B, 2);
-  and0.connect(A, 1);
-
-  and1.connect(xor0.getOutpNode(), 1);
-  // and1.connect(C, 2);
+  std::vector<bool*> nodes;
   
-  or0.connect(and0.getOutpNode(), 2);
-  or0.connect(and1.getOutpNode(), 1);
+  nodes.resize(5);
+  nodes[0] = A;
+  nodes[1] = B; 
+  nodes[2] = C;
 
-  xor1.connect(xor0.getOutpNode(), 1);
-  xor1.connect(C, 2);
 
-  for (int  i{0}; i < 3; i++) {
-    
-  or0.process();
-  xor1.process();
-  and0.process();
-  xor0.process();
-  and1.process();
-    std::cout << "input: " << *A << " ," << *B << " ," << *C << "  output: " <<
-      *xor1.getOutpNode() << " ," << *or0.getOutpNode() << std::endl;
-    // std::cout << "   and0: " << *and0.getOutpNode() << " and1: " << *and1.getOutpNode() <<
-    // " xor1: " << *xor0.getOutpNode() << " or0: " << *or0.getOutpNode() << " xor1: " << *xor1.getOutpNode() << std::endl;
+  Circuits::create("name: adder-1b");
+  Circuits::nodes.push_back(nodes);
+  Circuits::types.push_back(std::vector<BasicGate>{});
+
+  uint8_t t[5] = {3,3,// and
+    7,7, // xor
+    5}; // or
+  std::cout << "num of items: " << std::size(Circuits::types[0]) << std::endl;
+  for (int i{0}; i < 5; i++) {
+    Circuits::types[0].push_back(BasicGate{t[i]});
+
   }
+  std::cout << "num of items: " << std::size(Circuits::types[0]) << std::endl;
+  // and0
+  Circuits::types[0][0].connect(Circuits::nodes[0][0], 2);
+  Circuits::types[0][0].connect(Circuits::nodes[0][1], 1);
+  // and1
+  Circuits::types[0][1].connect(Circuits::nodes[0][2], 1);
+  Circuits::types[0][1].connect(Circuits::types[0][2].getOutpNode(), 2);
+  // xor0
+  Circuits::types[0][2].connect(Circuits::nodes[0][0], 2);
+  Circuits::types[0][2].connect(Circuits::nodes[0][1], 1);
+  // xor1
+  Circuits::types[0][3].connect(Circuits::nodes[0][2], 2);
+  Circuits::types[0][3].connect(Circuits::types[0][2].getOutpNode(), 1);
+  // or
+  Circuits::types[0][4].connect(Circuits::types[0][0].getOutpNode(), 2);
+  Circuits::types[0][4].connect(Circuits::types[0][1].getOutpNode(), 1);
+  // output
+  Circuits::nodes[0][3] = Circuits::types[0][3].getOutpNode();
+  Circuits::nodes[0][4] = Circuits::types[0][4].getOutpNode();
+
+  // dummy circuit
+  Circuits::circuits.push_back(std::vector<Circuit>{});
+  Circuit adder = Circuits::construct(0);
+  std::vector<bool*> node = adder.getNode();
   
-  // int id = Circuits::createCircuit("adder_1b");
-  // Circuits::types[id];
+
+  std::cout << "circuit and nodes are initiated\n";
   
+  adder.stepSize = 3;
+  for (int a{0}; a <= 1; a++) {
+    for (int b{0}; b <= 1; b++) {
+      for (int c{0}; c <= 1; c++) {
+        *A = a; *B = b; *C = c;
+        adder.step();
+        std::cout << "input: " << *A << " ," << *B << " ," << *C << "  output: " <<
+        *node[3] << " ," << *node[4] << std::endl;
+      }
+    }
+  }
+
+
+
+
   
+
   
 
   return 0;
@@ -75,55 +102,57 @@ int main (int argc, char *argv[]) {
 
 
 
-// int _main() {
-//   auto window = sf::RenderWindow(sf::VideoMode({1280,800}), "Creates", sf::Style::Resize, sf::State::Fullscreen);
-//   window.setFramerateLimit(60);
-//   window.setVerticalSyncEnabled(true);
+int _main() {
+  auto window = sf::RenderWindow(sf::VideoMode({1280,800}), "Creates", sf::Style::Resize, sf::State::Fullscreen);
+  window.setFramerateLimit(60);
+  window.setVerticalSyncEnabled(true);
 
-//   sf::Color color{50u,50u,50u};
-//   
-//   sf::Font font;
-//   bool loaded = font.openFromFile(std::filesystem::path("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf"));
-//   
-//   sf::Text y_{font};
-//   sf::Text x_{font};
-//   sf::Text text{font};
+  sf::Color color{50u,50u,50u};
+  
+  sf::Font font;
+  bool loaded = font.openFromFile(std::filesystem::path("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf"));
+  
+  sf::Text y_{font};
+  sf::Text x_{font};
+  sf::Text text{font};
 
-//   uint32_t quality = 2*4;
-//   data::t = 2;
-//   data::d = 50;
-//   
-//   sf::VertexArray rc{sf::PrimitiveType::TriangleStrip, quality};
+  uint32_t quality = 2*4;
+  data::t = 2;
+  data::d = 50;
+  
+  sf::VertexArray rc{sf::PrimitiveType::TriangleStrip, quality};
 
-//   const sf::Vector2<unsigned int> size = window.getSize();
+  const sf::Vector2<unsigned int> size = window.getSize();
 
-//   while (window.isOpen()) {
-//     window.clear(sf::Color {50u,50u,50u});
-//     processEvents(window);
+  while (window.isOpen()) {
+    window.clear(sf::Color {50u,50u,50u});
+    processEvents(window);
 
-//     y_.setString(std::to_string(data::mousePos.y));
-//     y_.setPosition({size.y*0.1f,0});
-//     x_.setString(std::to_string(data::mousePos.x));
-//     x_.setPosition({size.y*0.1f,30.f});
-//     text.setString(data::lastPressed);
-//     text.setPosition({size.y*0.1f,60.f});
-//     
-//     sf::VertexArray c{sf::PrimitiveType::TriangleFan, data::t * 4u};
-//     generateRoundedRect(c, data::t * 4u, (static_cast<sf::Vector2f>(data::mousePos)) , // - sf::Vector2f{50.f,50.f}),
-//                         {500.f, 800.f},(static_cast<float>(data::d)/256.f)/2.f);
-//     // generateCircle(c, quality, (static_cast<sf::Vector2f>(data::mousePos)),
-//     //                200);
-//     
-//     window.draw(c);
-//     window.draw(y_);
-//     window.draw(x_);
-//     window.draw(text);
-//    
+    y_.setString(std::to_string(data::mousePos.y));
+    y_.setPosition({size.y*0.1f,0});
+    x_.setString(std::to_string(data::mousePos.x));
+    x_.setPosition({size.y*0.1f,30.f});
+    text.setString(data::lastPressed);
+    text.setPosition({size.y*0.1f,60.f});
+    
+    sf::VertexArray c{sf::PrimitiveType::TriangleFan, data::t * 4u};
+    generateRoundedRect(c, data::t * 4u, (static_cast<sf::Vector2f>(data::mousePos)) , // - sf::Vector2f{50.f,50.f}),
+                        {500.f, 800.f},(static_cast<float>(data::d)/256.f)/2.f);
+    // generateCircle(c, quality, (static_cast<sf::Vector2f>(data::mousePos)),
+    //                200);
+    
+    window.draw(c);
+    window.draw(y_);
+    window.draw(x_);
+    window.draw(text);
+   
 
-//     window.display();
-//     
-//   }
-// }
+    window.display();
+    
+  }
+
+  return 0;
+}
 
 
 
