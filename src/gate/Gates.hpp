@@ -24,7 +24,7 @@ struct BasicGate {
   
   // evaluate the gate
   void process();
-// private:
+private:
   // what kind of logic gate it is, 0 is null component with 0 input and 0 output
   uint8_t type = 0;
 

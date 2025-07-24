@@ -24,15 +24,32 @@ bool* BasicGate::getOutpNode() {
   return buffer;
 }
 
+
+void test() {
+  int* a = new int {2};
+  int b = 4;
+  int& bRef = b;
+  a = &bRef;
+}
+
+
 void BasicGate::process() {
   if (type != 0) {
     *nodes[0] = *buffer;
+
+    *nodes[1] = 0;
+
+    if (type >= 3) {
+      *nodes[2] = 0;
+    }
   }
+
+
 
   try {
   switch (type) {
     case 0: {break;} // null
-    case 1: {*buffer = !*nodes[1]; break;} // not
+    case 1: {*buffer = !*nodes[1];break;} // not
     case 2: {*buffer = *nodes[1];break;} // buffer
     case 3: {*buffer = *nodes[1] && *nodes[2];break;} // and
     case 4: {*buffer = !(*nodes[1] && *nodes[2]);break;} // nand

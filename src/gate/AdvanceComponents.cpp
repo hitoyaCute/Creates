@@ -1,9 +1,11 @@
 #include "Components.hpp"
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <type_traits>
 
 
 
@@ -54,30 +56,28 @@ std::vector<bool*> Circuit::getNode(){
 
 
 /// this will construct a circuit
-std::vector<std::vector<BasicGate>> Circuits::types{};
-std::vector<std::vector<Circuit>> Circuits::circuits{};
-std::vector<std::vector<bool*>> Circuits::nodes{};
+std::vector<std::vector<uint8_t>> Circuits::types{};
+std::vector<std::vector<uint8_t>> Circuits::circuits{};
+std::vector<std::vector<uint8_t>> Circuits::nodes{};
 std::vector<std::string> Circuits::info{};
+std::vector<std::vector<std::array<uint8_t, 2>>> gConnector{};
+std::vector<std::vector<std::array<uint8_t, 2>>> cConnector{};
 
-void Circuits::create(std::string info_) {
-  info.push_back(info_);
+
+
+Circuits::Creator Circuits::create(std::string info_) {
+  Creator creator{};
+  /// creating and initiating the required data
+
+
+
+  return creator;
 }
 
 
 Circuit Circuits::construct(uint8_t type) {
-  return  Circuit {type, nodes[type], types[type], circuits[type]};
   
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
