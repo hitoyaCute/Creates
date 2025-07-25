@@ -2,12 +2,8 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <iterator>
 #include <string>
-#include <type_traits>
-
-
 
 
 Circuit::Circuit(uint8_t type_,
@@ -75,9 +71,9 @@ Circuits::Creator Circuits::create(std::string info_) {
 }
 
 
-Circuit Circuits::construct(uint8_t type) {
-  
-}
+// Circuit Circuits::construct(uint8_t type) {
+//   
+// }
 
 
 

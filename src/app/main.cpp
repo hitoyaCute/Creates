@@ -37,41 +37,41 @@ int main (int argc, char *argv[]) {
   nodes[2] = C;
 
 
-  Circuits::create("name: adder-1b");
-  Circuits::nodes.push_back(nodes);
-  Circuits::types.push_back(std::vector<BasicGate>{});
+  "name: adder-1b";
+  std::vector<BasicGate> gates{};
 
   uint8_t t[5] = {3,3,// and
     7,7, // xor
     5}; // or
-  std::cout << "num of items: " << std::size(Circuits::types[0]) << std::endl;
+  std::cout << "num of items: " << std::size(gates) << std::endl;
   for (int i{0}; i < 5; i++) {
-    Circuits::types[0].push_back(BasicGate{t[i]});
+    gates.push_back(BasicGate{t[i]});
 
   }
-  std::cout << "num of items: " << std::size(Circuits::types[0]) << std::endl;
+  std::cout << "num of items: " << std::size(gates) << std::endl;
   // and0
-  Circuits::types[0][0].connect(Circuits::nodes[0][0], 2);
-  Circuits::types[0][0].connect(Circuits::nodes[0][1], 1);
+  gates[0].connect(nodes[0], 2);
+  gates[0].connect(nodes[1], 1);
   // and1
-  Circuits::types[0][1].connect(Circuits::nodes[0][2], 1);
-  Circuits::types[0][1].connect(Circuits::types[0][2].getOutpNode(), 2);
+  gates[1].connect(nodes[2], 1);
+  gates[1].connect(gates[2].getOutpNode(), 2);
   // xor0
-  Circuits::types[0][2].connect(Circuits::nodes[0][0], 2);
-  Circuits::types[0][2].connect(Circuits::nodes[0][1], 1);
+  gates[2].connect(nodes[0], 2);
+  gates[2].connect(nodes[1], 1);
   // xor1
-  Circuits::types[0][3].connect(Circuits::nodes[0][2], 2);
-  Circuits::types[0][3].connect(Circuits::types[0][2].getOutpNode(), 1);
+  gates[3].connect(nodes[2], 2);
+  gates[3].connect(gates[2].getOutpNode(), 1);
   // or
-  Circuits::types[0][4].connect(Circuits::types[0][0].getOutpNode(), 2);
-  Circuits::types[0][4].connect(Circuits::types[0][1].getOutpNode(), 1);
+  gates[4].connect(gates[0].getOutpNode(), 2);
+  gates[4].connect(gates[1].getOutpNode(), 1);
   // output
-  Circuits::nodes[0][3] = Circuits::types[0][3].getOutpNode();
-  Circuits::nodes[0][4] = Circuits::types[0][4].getOutpNode();
+  nodes[3] = gates[3].getOutpNode();
+  nodes[4] = gates[4].getOutpNode();
 
   // dummy circuit
-  Circuits::circuits.push_back(std::vector<Circuit>{});
-  Circuit adder = Circuits::construct(0);
+  std::vector<Circuit> circuits{};
+  Circuit adder{0,nodes,gates,circuits};
+
   std::vector<bool*> node = adder.getNode();
   
 

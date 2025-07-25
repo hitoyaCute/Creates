@@ -13,6 +13,10 @@ BasicGate::BasicGate (uint8_t type_):
   }
 };
 void BasicGate::connect(bool *node, uint8_t index) {
+  if (nodes[index] != 0) {
+    throw std::runtime_error("connecting to a node already connected will result to the gate loosing its reference to the node its previusly connected to");
+  }
+
   nodes[index] = node;
 }; 
 
@@ -25,40 +29,26 @@ bool* BasicGate::getOutpNode() {
 }
 
 
-void test() {
-  int* a = new int {2};
-  int b = 4;
-  int& bRef = b;
-  a = &bRef;
-}
-
-
 void BasicGate::process() {
   if (type != 0) {
     *nodes[0] = *buffer;
-
-    *nodes[1] = 0;
-
-    if (type >= 3) {
-      *nodes[2] = 0;
-    }
   }
 
-
-
   try {
-  switch (type) {
-    case 0: {break;} // null
-    case 1: {*buffer = !*nodes[1];break;} // not
-    case 2: {*buffer = *nodes[1];break;} // buffer
-    case 3: {*buffer = *nodes[1] && *nodes[2];break;} // and
-    case 4: {*buffer = !(*nodes[1] && *nodes[2]);break;} // nand
-    case 5: {*buffer = *nodes[1] || *nodes[2];break;} // or
-    case 6: {*buffer = !(*nodes[1] || *nodes[2]);break;} // nor
-    case 7: {*buffer = *nodes[1] != *nodes[2];break;} // xor
-    case 8: {*buffer = *nodes[1] == *nodes[2];break;} // xnor
-    default: {throw std::runtime_error(std::to_string(type) + " is not a valid gate type");break;}
-  }} catch (const std::error_code err) {
+    switch (type) {
+      case 0: {break;} // null
+      case 1: {*buffer = !*nodes[1];break;} // not
+      case 2: {*buffer = *nodes[1];break;} // buffer
+      case 3: {*buffer = *nodes[1] && *nodes[2];break;} // and
+      case 4: {*buffer = !(*nodes[1] && *nodes[2]);break;} // nand
+      case 5: {*buffer = *nodes[1] || *nodes[2];break;} // or
+      case 6: {*buffer = !(*nodes[1] || *nodes[2]);break;} // nor
+      case 7: {*buffer = *nodes[1] != *nodes[2];break;} // xor
+      case 8: {*buffer = *nodes[1] == *nodes[2];break;} // xnor
+      default: {throw std::runtime_error(std::to_string(type) + " is not a valid gate type");break;}
+    }
+  
+  } catch (const std::error_code err) {
     throw std::runtime_error("Segmentation fault (Core dumped): probably theres no nodes");
   }
 
