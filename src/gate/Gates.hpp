@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <vector>
 
+namespace Creates{
 
 // component that represent a logic gate
 struct BasicGate {
@@ -19,22 +20,14 @@ struct BasicGate {
   // get type
   uint8_t getType();
 
-  // get the output Node
-  bool* getOutpNode();
-  
   // evaluate the gate
   void process();
 private:
-  bool isMultiNodal = false;
-
   // what kind of logic gate it is, 0 is null component with 0 input and 0 output
   uint8_t type = 0;
 
   // nodes reference on what the gate will use
   std::vector<bool*> nodes;
-  // buffer reference on what the gate's current state
-  bool* buffer;
-
 };
 
 namespace BasicGateType {
@@ -60,10 +53,6 @@ namespace BasicGateType {
   false,
   true
   };
-  
-  
-};
+}; // BasicGateType
 
-
-
-
+}; // Creates

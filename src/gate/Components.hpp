@@ -4,7 +4,7 @@
 #include <vector>
 #include "Gates.hpp"
 
-
+namespace Creates {
 /// complex object
 /// its a object that is not a basic gate nor input/output objects
 enum struct complex {
@@ -91,4 +91,13 @@ public:
   /// deletes a type using its ID/index
   static void incinirate(uint8_t index);
 };
+
+
+struct Node{
+  bool state = false;
+  std::vector<bool*> a; 
+  void prop(){};
+};
+
+}; // creates
 

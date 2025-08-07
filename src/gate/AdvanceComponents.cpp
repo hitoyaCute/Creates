@@ -6,6 +6,8 @@
 #include <string>
 
 
+namespace Creates{
+
 Circuit::Circuit(uint8_t type_,
                  std::vector<bool*> nodes_,
                  std::vector<BasicGate> &gates_,
@@ -76,4 +78,4 @@ Circuits::Creator Circuits::create(std::string info_) {
 // }
 
 
-
+}; // creates

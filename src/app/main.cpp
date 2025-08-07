@@ -24,6 +24,12 @@
 #include "gate/Components.hpp"
 #include "gate/Gates.hpp"
 
+
+
+using namespace Creates;
+
+
+
 int main (int argc, char *argv[]) {
   bool* A = new bool {true};
   bool* B = new bool {true};
@@ -37,7 +43,6 @@ int main (int argc, char *argv[]) {
   nodes[2] = C;
 
 
-  "name: adder-1b";
   std::vector<BasicGate> gates{};
 
   uint8_t t[5] = {3,3,// and
@@ -95,6 +100,80 @@ int main (int argc, char *argv[]) {
   
 
   
+
+  return 0;
+}
+
+
+
+int __main(){
+  
+  /////// buidling half adder
+  Creates::Circuits::Generator halfADD{"name:half-adder;"};
+  // set a nodes 3 for input and 2 for output
+  halfADD.setNodes(4); // input are 0,1 sum is 2 and cary is 3
+
+  // add and(3)
+  halfADD.add(3);
+  halfADD.add(3);
+  // add xor(4)
+  halfADD.add(7);
+  halfADD.add(7);
+  // add or(2)
+  halfADD.add(5);
+
+  // connectGate - connect a gate to a node
+  // param:
+  // int first - index of the gate
+  // int firstNode - index of what node on that gate
+  // int second - index of the gate/circuit/node
+  // int secondNode - index of the node on that gate/circuit, if node it will do nothing
+  // char secondType = 'g' - g means gate on second and c for circuit and i for input
+  // connect the input0 to and gate to the 0th node of the gate
+  halfADD.connectGate(0, 0, 0, 0, 'i');
+  // connect the input1 to and gate to its 1th node
+  halfADD.connectGate(0, 1, 1, 0, 'i');
+  // connect the input0 to xor gate to its 0th node
+  halfADD.connectGate(2, 0, 0, 0, 'i');
+  // connect the input1 to xor gate to its 
+  halfADD.connectGate(2, 1, 1, 0, 'i');
+
+  // connect a node to a object same as connectGate
+  // connect node(3) aka output(1) to and gate's node(2) aka output
+  halfADD.connectNode(3, 0, 2, 'g');
+  // connect node(2) aka output(0) to xor gate's node(2) aka output
+  halfADD.connectNode(2, 1, 2, 'g');
+  int type = halfADD.save();
+
+  ////// build a full adder using 2 half adder
+  Creates::Circuits::Generator Adder{"name:adder-1b;"};
+
+  // create 2 half adder
+  Adder.addCircuit(type);
+  Adder.addCircuit(type);
+  Adder.add(5); // or gate
+  
+  // same for connectGate but first 2 parameters is a circuit
+  // connect first circuit's node(2) aka output(0) to second circuit's node(0) aka input(0)
+  Adder.connectCircuit(0, 2, 1, 0, 'c');
+  // connect first circuit's node(3) aka output(1) to or gate's node(0) aka input(0)
+  Adder.connectCircuit(0, 3, 0, 0, 'g');
+  // connect second circuit's node(3) aka output(1) to or gate's node(1) aka input(1)
+  Adder.connectCircuit(1, 3, 0, 1, 'g');
+  // connect the node(0) aka input(0) to circuit(0)'s node(0) aka input(0)
+  Adder.connectNode(0, 0, 0, 'c');
+  // connect the node(1) aka input(1) to circuit(0)'s node(1) aka input(1)
+  Adder.connectNode(1, 0, 1, 'c');
+  // connect the node(2) aka input(2) to circuit(1)'s node(1) aka input(1)
+  Adder.connectNode(2, 1, 1, 'c');
+  // connect the node(3) aka output(0) sum to circuit(1)'s node(2) aka output(0)
+  Adder.connectNode(3, 1, 2, 'c');
+  // connect the 
+
+
+
+  
+
 
   return 0;
 }
