@@ -23,10 +23,9 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(${PROJECT_NAME}
   ./src/app/main.cpp
-  ./src/ui/shapes/basicShape.cpp
+  ./src/ui/shapes/BasicShape.cpp
   ./src/ui/events/EventProcessor.cpp
-  ./src/gate/Gates.cpp
-  ./src/gate/AdvanceComponents.cpp)
+)
 
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
