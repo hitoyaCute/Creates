@@ -2,7 +2,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include "basicShape.hpp"
 
-namespace Calc {
+namespace MEU {
 namespace Shape {
 
 CircleGenerator::CircleGenerator(const uint32_t quality_, const float radius_):

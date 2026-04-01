@@ -21,8 +21,10 @@
 #include <SFML/Graphics/CoordinateType.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "ui/uiElement/shapes/Shapes.hpp"
-#include "ui/uiElement/events/EventProcessor.hpp"
+// #include "/ui/shapes/GlShapes.hpp"
+#include "SFML/Window/Mouse.hpp"
+#include "app/event.hpp"
+#include "ui/shapes/basicShape.hpp"
 
 // int __main(){
 //   
@@ -106,27 +108,25 @@ void print_vertex_array(sf::VertexArray& arr) {
 }
 
 
-int main() {
+int main_() {
   auto window = sf::RenderWindow(sf::VideoMode({1280,800}), "Creates", sf::Style::Resize, sf::State::Fullscreen);
   window.setFramerateLimit(60);
   // window.setVerticalSyncEnabled(true);
 
   sf::Color color{50u,50u,50u};
-  
+
   sf::Font font;
-  bool loaded = font.openFromFile(std::filesystem::path("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf"));
-  
+  bool loaded = font.openFromFile(RES_DIR"fonts/NerdFonts/HackNerdFontMono-Regular.ttf");
+
   sf::Text y_{font};
   sf::Text x_{font};
 
   uint32_t quality = 8;
-  data::t = 2;
-  data::d = 50;
-  
+
   sf::VertexArray rcb{sf::PrimitiveType::TriangleStrip, quality*4*2+2};
   sf::VertexArray rc{sf::PrimitiveType::TriangleFan, quality*4};
   sf::VertexArray c{sf::PrimitiveType::TriangleFan, quality * 4};
- 
+
   const sf::Vector2<unsigned int> size = window.getSize();
 
 
@@ -136,39 +136,29 @@ int main() {
   sf::VertexArray sim_window_border{sf::PrimitiveType::TriangleStrip, quality*4*2+2};
   // sim_window.setPosition(sf::Vector2f{10.f,110.f});
   // sim_window.setSize(sf::Vector2f{size.x - 20.f, size.y - 110.f - 10.f});
-
-
-
-
+  
   while (window.isOpen()) {
+    const auto mousePos = sf::Mouse::getPosition(window);
     window.clear(sf::Color {75u,75u,75u});
-    processEvents(window);
+    process_event(window);
 
-    y_.setString(std::to_string(data::mousePos.y));
+    y_.setString(std::to_string(mousePos.y));
     y_.setPosition({25.f,5.f});
-    x_.setString(std::to_string(data::mousePos.x));
+    x_.setString(std::to_string(mousePos.x));
     x_.setPosition({25.f,35.f});
-    // text.setString(data::lastPressed);
-    // text.setPosition({size.y*0.1f,60.f});
-    
-    // generateRoundedRect(c, data::t * 4u, (static_cast<sf::Vector2f>(data::mousePos)) , // - sf::Vector2f{50.f,50.f}),
-    //                     {500.f, 800.f},(static_cast<float>(data::d)/256.f)/2.f);
-    // generateCircle(c, quality, (static_cast<sf::Vector2f>(data::mousePos)),
-    //                200);
-    Creates::CreateCircle(c, quality * 4, 10.f, static_cast<sf::Vector2f>(data::mousePos), sf::Color{255,255,0});
-    // Creates::CreateRoundedRectBorder(rcb, quality*4*2+2, 50, 30.f, sf::Vector2f{500.f,500.f}, sf::Vector2f{250.f,250.f}, sf::Color{255,255,255,150}, sf::Color{50,50,50,0});
-    Creates::CreateRoundedRect(top_shelf,
+
+    MEU::Shape::CreateCircle(c, quality * 4, 10.f, static_cast<sf::Vector2f>(mousePos), sf::Color{255,255,0});
+    MEU::Shape::CreateRoundedRect(top_shelf,
                                quality*4,
                                20.f,
                                sf::Vector2f{size.x-20.f,100.f},
                                sf::Vector2f{10.f,10.f}, sf::Color{200,200,200});
-    Creates::CreateRoundedRect(sim_window, quality*4, 20.f, sf::Vector2f{size.x - 20.f, size.y - 120.f - 10.f}, sf::Vector2f{10.f,120.f}, sf::Color{50,50,50});
-    Creates::CreateRoundedRectBorder(sim_window_border, quality*4*2+2, 20.f, 20.f, sf::Vector2f{size.x - 20.f, size.y - 120.f - 10.f}, sf::Vector2f{10.f,120.f}, sf::Color{50,50,50}, sf::Color{75,75,75,0});
-    
+    MEU::Shape::CreateRoundedRect(sim_window, quality*4, 20.f, sf::Vector2f{size.x - 20.f, size.y - 120.f - 10.f}, sf::Vector2f{10.f,120.f}, sf::Color{50,50,50});
+    MEU::Shape::CreateRoundedRectBorder(sim_window_border, quality*4*2+2, 20.f, 20.f, sf::Vector2f{size.x - 20.f, size.y - 120.f - 10.f}, sf::Vector2f{10.f,120.f}, sf::Color{50,50,50}, sf::Color{75,75,75,0});
+
     window.draw(sim_window_border);
     window.draw(sim_window);
     window.draw(top_shelf);
-    // window.draw(rcb);
     window.draw(c);
     window.draw(y_);
     window.draw(x_);

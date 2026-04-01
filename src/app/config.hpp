@@ -4,8 +4,8 @@
 
 namespace conf {
 
-static const char* const project_name = "Calculator";
-static sf::Vector2u constexpr window_size = {491,511};
+static const char* const project_name = "Creates";
+static sf::Vector2u constexpr window_size = {1280,800};
 static sf::Vector2f constexpr window_size_f {window_size};
 static sf::Font font {RES_DIR"/fonts/NerdFonts/HackNerdFont-Bold.ttf"};
 
