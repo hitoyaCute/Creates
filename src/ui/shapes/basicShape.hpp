@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 
-namespace Calc {
+namespace MEU {
 namespace Shape {
 
 struct CircleGenerator {
