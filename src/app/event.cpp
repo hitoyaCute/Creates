@@ -14,7 +14,7 @@ void process_event(sf::RenderWindow &win) {
                 win.close();
             }
         } else if(const auto wheel = event->getIf<sf::Event::MouseWheelScrolled>()) {
-            float temp = wheel->delta;
+            float temp = wheel->delta * 2;
             printf("%f\n", ((float)Glob::zoom_scalar) / 255.f);
             if (temp+(float)Glob::zoom_scalar > 255) {
                 Glob::zoom_scalar = -1;
