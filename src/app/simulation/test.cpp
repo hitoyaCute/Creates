@@ -26,6 +26,7 @@ struct GateArray64 {
     uint_fast64_t                old_output;
     Types               type;
 
+
     void operator()() {
         current_inputs = new_inputs;
         new_inputs = {0,0};
@@ -52,7 +53,7 @@ struct GateArray64 {
     }
 };
 struct Gate {
-    enum Types: int8_t {
+    enum class Types: int8_t {
         Unknown = 0,
         Buffer,
         And,
@@ -77,22 +78,22 @@ struct Gate {
         new_inputs = {0,0};
         old_output = current_output;
         
-        if (type == Unknown);
-        else if (type == Buffer) {
+        if (type == Types::Unknown);
+        else if (type == Types::Buffer) {
             current_output = current_inputs[0];
-        } else if (type == And) {
+        } else if (type == Types::And) {
             current_output = current_inputs[0] and current_inputs[1];
-        } else if (type == Or) {
+        } else if (type == Types::Or) {
             current_output = current_inputs[0] or current_inputs[1];
-        } else if (type == Xor) {
+        } else if (type == Types::Xor) {
             current_output = current_inputs[0] != current_inputs[1];
-        } else if (type == Not) {
+        } else if (type == Types::Not) {
             current_output = not current_inputs[0];
-        } else if (type == Nand) {
+        } else if (type == Types::Nand) {
             current_output = not (current_inputs[0] and current_inputs[1]);
-        } else if (type == Nor) {
+        } else if (type == Types::Nor) {
             current_output = not (current_inputs[0] or current_inputs[1]);
-        } else if (type == Xnor) {
+        } else if (type == Types::Xnor) {
             current_output = current_inputs[0] == current_inputs[1];
         }
     }
@@ -119,8 +120,9 @@ struct Circuit {
 
 };
 
-int main(void) {
+int main_(void) {
     bool running = 1;
+
     while (running) {
     }
     return 0;
