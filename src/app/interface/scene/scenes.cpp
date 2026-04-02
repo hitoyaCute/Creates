@@ -1,3 +1,4 @@
+#include "app/globals.hpp"
 #include "app/interface/res_handler/Resource.hpp"
 #include "app/interface/scene/scene.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
@@ -25,13 +26,12 @@ sf::VertexArray c{sf::PrimitiveType::TriangleFan, quality * 4};
 sf::VertexArray top_shelf{sf::PrimitiveType::TriangleFan, quality*4};
 
 
-sf::View sim_window_view{};
 // where the texture will be laid
 sf::VertexArray sim_window{sf::PrimitiveType::Triangles, 6};
 // super big texture
-sf::RenderTexture sim_window_render{{800,800}};
+sf::RenderTexture sim_window_render;
 
-sf::Vector2<unsigned int> size;
+sf::Vector2f size;
 
 inline void draw_intro(sf::RenderWindow& win) {
 }
@@ -40,7 +40,7 @@ inline void draw_main(sf::RenderWindow& window) {
     window.clear(sf::Color {75u,75u,75u});
     sim_window_render.clear(sf::Color{255,255,255,0});
 
-    const auto mousePos = (sf::Vector2f)sf::Mouse::getPosition(window);
+    const auto mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     MEU::Shape::CreateCircle(c, quality * 4, 10.f, sf::Vector2f{mousePos}, sf::Color{255,255,0});
     y_.setString(std::to_string((int)mousePos.y));
     x_.setString(std::to_string((int)mousePos.x));
@@ -49,11 +49,18 @@ inline void draw_main(sf::RenderWindow& window) {
     a.setFillColor(sf::Color::Blue);
     a.setPosition(mousePos);
 
+    /// zoom
+
+    sf::View sim_window_view{};
+    sim_window_view.setSize(size);
+    sim_window_view.zoom(((float)Glob::zoom_scalar) / 255.f);
+
+    sim_window_render.setView(sim_window_view);
+
     sim_window_render.draw(a);
     sim_window_render.display();
 
     sf::RenderStates sim_render_state;
-
     sim_render_state.texture = &sim_window_render.getTexture();
     // drawn at the back
     window.draw(sim_window, sim_render_state);
@@ -67,8 +74,8 @@ inline void draw_main(sf::RenderWindow& window) {
 
 
 void load_scene(sf::RenderWindow& window, int scene) {
-    size = window.getSize();
-
+    size = (sf::Vector2f)window.getSize();
+    sim_window_render = {(sf::Vector2u)size};
     y_.setPosition({25.f,5.f});
     x_.setPosition({25.f,35.f});
 
@@ -79,11 +86,10 @@ void load_scene(sf::RenderWindow& window, int scene) {
                                   sf::Vector2f{10.f,10.f}, sf::Color{200,200,200});
 
     const auto win_size = (sf::Vector2f)window.getSize();
-    sim_window_view.setSize({100,100});
-    sim_window_view.setCenter({50.f,50.f});
+    // sim_window_view.setCenter(win_size/2.f);
     sf::Texture text = sim_window_render.getTexture();
-    
 
+    
     auto temp = (sf::Vector2f)text.getSize();
     
     sim_window[0].texCoords = {0,0};
