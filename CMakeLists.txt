@@ -38,6 +38,7 @@ add_executable(${PROJECT_NAME}
     ./src/app/main.cpp
     ./src/app/simulation/Objects.cpp
     ./src/app/simulation/test.cpp
+    ./src/app/interface/scene/main_scene.cpp
     ./src/app/interface/scene/scenes.cpp
     ./lib/Interpolated/Interpolated.cpp)
 

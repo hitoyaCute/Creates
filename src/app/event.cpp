@@ -15,14 +15,15 @@ void process_event(sf::RenderWindow &win) {
             }
         } else if(const auto wheel = event->getIf<sf::Event::MouseWheelScrolled>()) {
             float temp = wheel->delta * 2;
-            printf("%f\n", ((float)Glob::zoom_scalar) / 255.f);
+            // printf("%f\n", ((float)Glob::zoom_scalar) / 255.f);
             if (temp+(float)Glob::zoom_scalar > 255) {
-                Glob::zoom_scalar = -1;
-            } else if (temp+(float)Glob::zoom_scalar <= 0) {
-                Glob::zoom_scalar = 0;
+                Glob::zoom_scalar = 255;
+            } else if (temp+(float)Glob::zoom_scalar <= 10) {
+                Glob::zoom_scalar = 10;
             } else {
                 Glob::zoom_scalar = temp+(float)Glob::zoom_scalar;
             }
+            printf("%d\n",Glob::zoom_scalar);
         }
     }
 }

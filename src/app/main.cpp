@@ -23,8 +23,11 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include "app/event.hpp"
+#include "app/globals.hpp"
 #include "app/interface/scene/scene.hpp"
 #include "ui/shapes/basicShape.hpp"
+
+
 
 
 int main() {
@@ -32,7 +35,7 @@ int main() {
     window.setFramerateLimit(60);
     // window.setVerticalSyncEnabled(true);
     
-    load_scene(window, 1);
+    load_main(window);
 
     while (window.isOpen()) {
         process_event(window);
