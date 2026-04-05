@@ -18,8 +18,8 @@ void process_event(sf::RenderWindow &win) {
             // printf("%f\n", ((float)Glob::zoom_scalar) / 255.f);
             if (temp+(float)Glob::zoom_scalar > 255) {
                 Glob::zoom_scalar = 255;
-            } else if (temp+(float)Glob::zoom_scalar <= 10) {
-                Glob::zoom_scalar = 10;
+            } else if (temp+(float)Glob::zoom_scalar <= 1) {
+                Glob::zoom_scalar = 1;
             } else {
                 Glob::zoom_scalar = temp+(float)Glob::zoom_scalar;
             }
