@@ -34,12 +34,12 @@ set_target_properties(sfml-graphics sfml-window sfml-system
 add_executable(${PROJECT_NAME}
     ./src/ui/shapes/basicShape.cpp
     ./src/ui/Primitives/Button.cpp
-    ./src/app/event.cpp
-    ./src/app/main.cpp
     ./src/app/simulation/Objects.cpp
     ./src/app/simulation/test.cpp
-    ./src/app/interface/scene/main_scene.cpp
+    ./src/app/main.cpp
+    ./src/app/event.cpp
     ./src/app/interface/scene/scenes.cpp
+    ./src/app/interface/scene/main_scene.cpp
     ./lib/Interpolated/Interpolated.cpp)
 
 
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
 
 
 # set debug symbols and optimization level with warnings and c++20 standard
-target_compile_options(${PROJECT_NAME} PRIVATE -g -O1 -Wall -std=c++20)
+target_compile_options(${PROJECT_NAME} PRIVATE -g -O1 -Wall -std=c++23)
 
 # include headers sources
 target_include_directories(${PROJECT_NAME} PRIVATE

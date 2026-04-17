@@ -61,7 +61,7 @@ public:
         }
 
         if (!shaders[name].loadFromFile(filename, type)) {
-            std::cerr << "cant open shader '" << "'" << std::endl;
+            std::cerr << "cant open shader " << filename << std::endl;
             exit(-1);
         } else {
             return shaders.at(name);

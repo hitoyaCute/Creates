@@ -1,12 +1,11 @@
 #include <cmath>
-#include <string>
-#include <cstdint>
 #include <unistd.h>
-#include <iostream>
+// #include <iostream>
 #include <sys/stat.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Err.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -22,27 +21,36 @@
 #include <SFML/Graphics/CoordinateType.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+#include "config.hpp"
+#include "util/time.hpp"
 #include "app/event.hpp"
-#include "app/globals.hpp"
-#include "app/interface/scene/scene.hpp"
 #include "ui/shapes/basicShape.hpp"
+#include "app/interface/scene/scene.hpp"
 
-
+Time Time;
 
 
 int main() {
-    auto window = sf::RenderWindow(sf::VideoMode({1280,800}), "Creates", sf::Style::Resize, sf::State::Fullscreen);
+    auto window = sf::RenderWindow(sf::VideoMode(conf::window_size), conf::project_name, sf::Style::Resize, sf::State::Fullscreen);
     window.setFramerateLimit(60);
-    // window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(true);
     
     load_main(window);
-
+    char counter = 0;
+    sf::Clock clock;
     while (window.isOpen()) {
         process_event(window);
         // display main
         display_scene(window, 1);
-
         window.display();
+
+        counter++;
+        if (counter == 0) {
+            clock.stop();
+            printf("%f fps\n", 255.f / clock.getElapsedTime().asSeconds());
+            clock.restart();
+            counter = 0;
+        }
     }
     return 0;
 }
