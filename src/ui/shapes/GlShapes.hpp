@@ -14,8 +14,7 @@ using std::filesystem::path;
 namespace MEU {
 namespace GLShapes {
     
-    #define rounded_rect_setup()
-    inline void set_rounded_rect(sf::VertexArray& va, const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& col = sf::Color::White) {
+    inline void set_rect(sf::VertexArray& va, const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Color& col = sf::Color::White) {
         const sf::Vector2f half = size * 0.5f;
         const sf::Vector2f center = pos + half;
 
@@ -42,7 +41,7 @@ namespace GLShapes {
         shad.setUniform("radius", radius);
         shad.setUniform("halfSize", sf::Glsl::Vec2{size * 0.5f});
 
-        set_rounded_rect(va, pos, size, col);
+        set_rect(va, pos, size, col);
         target.draw(va, states);
     }
 
