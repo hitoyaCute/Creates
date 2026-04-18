@@ -138,12 +138,15 @@ void process_global_changes(sf::RenderWindow& window) {
 
 // horizontall shelf that  you can move
 void draw_shelf_items(sf::RenderWindow& window) {
+    // bound of the shelf
+    // pos x, y        size       x           , y
     // {10.f,10.f}, sf::Vector2f{size.x - 20.f,100.f}
 
-    constexpr unsigned shelf_lenght = 2000;
-    constexpr sf::Vector2f element_size{80,80};
-    auto half_size = element_size * 0.5f;
-    constexpr float eleme_rad = 20.f;
+    const auto shelf_size = sf::Vector2f{size.x - 40.f,80.f};
+    const unsigned shelf_length = 2000;
+
+    const sf::Vector2f element_size{80,80};
+    const float eleme_rad = 20.f;
     // ammount of how much was the view is positined
     // 0 = maxed at the first
     // 255 = at end
@@ -156,7 +159,7 @@ void draw_shelf_items(sf::RenderWindow& window) {
     if (shad_not_loaded) {
         if (item_rounded_rect_shader.loadFromFile(RES_DIR"/shader/shape_shader/shade_rounded_rect.frag",sf::Shader::Type::Fragment)) {
             shad_not_loaded = 0;
-            item_rounded_rect_shader.setUniform("halfSize", sf::Glsl::Vec2{half_size});
+            item_rounded_rect_shader.setUniform("halfSize", sf::Glsl::Vec2{element_size * 0.5f});
             item_rounded_rect_shader.setUniform("radius", eleme_rad);
         } else {
             fprintf(stderr,"shader doesnt load\n");
@@ -165,35 +168,49 @@ void draw_shelf_items(sf::RenderWindow& window) {
     }
 
 
-    sf::RenderTexture shelf{sf::Vector2u{shelf_lenght,80}};
+    sf::RenderTexture shelf{(sf::Vector2u)shelf_size + sf::Vector2u{shelf_length,0}};
     sf::View view;
     shelf.clear(sf::Color{200,200,200});
     sf::VertexArray rect{sf::PrimitiveType::TriangleFan, 4};
+    // setting view
+    //                         offset    this should move the screen      
+    const auto center = /*sf::Vector2f{shelf_length * (view_percent / 255.f)**,0} + **/ shelf_size * 0.5f;
+    view.setCenter(center);
+    view.setSize(shelf_size);
+    shelf.setView(view);
+
     
     // modes
-    // 1               pos
-    MEU::GLShapes::set_rect(rect, {0,0}, element_size);
+    // 1
+    rect[0] = {{0,0}              , sf::Color::White, {0,0}              };
+    rect[1] = {{0,element_size.y} , sf::Color::White, {0,element_size.y} };
+    rect[2] = {element_size       , sf::Color::White, element_size       };
+    rect[3] = {{element_size.x, 0}, sf::Color::White, {element_size.x, 0}};
     shelf.draw(rect, sf::RenderStates(&item_rounded_rect_shader));
     // 2
-    MEU::GLShapes::set_rect(rect, {85,0}, element_size, sf::Color::Red);
+    //                                   offset
+    sf::Vector2f offset = {element_size.x + 10,0};
+    rect[0] = {sf::Vector2f{0,0}               + offset, sf::Color::Red, sf::Vector2f{0,0}              };
+    rect[1] = {sf::Vector2f{0,element_size.y}  + offset, sf::Color::Red, sf::Vector2f{0,element_size.y} };
+    rect[2] = {element_size                    + offset, sf::Color::Red, element_size                   };
+    rect[3] = {sf::Vector2f{element_size.x, 0} + offset, sf::Color::Red, sf::Vector2f{element_size.x, 0}};
     shelf.draw(rect, sf::RenderStates(&item_rounded_rect_shader));
-
 
 
     // drawing the shelf to the window
-    half_size = sf::Vector2f{size.x - 40.f,80.f} * 0.5f;
-    //                         offset    this should move the screen      
-    const auto center = sf::Vector2f{shelf_lenght /* (Glob::zoom_scalar / 255.f)*/,0} + half_size;
-    view.setCenter(center);
-    view.setSize(half_size * 2.f);
-    shelf.setView(view);
     shelf.display();
-    MEU::GLShapes::set_rect(rect, {20,20}, half_size * 2.f);
+    // MEU::GLShapes::set_rect(rect, {20,20}, half_size * 2.f);
+    //
+    offset = {20,20};
+    rect[0] = {{offset}                           , sf::Color::White, {}               };
+    rect[1] = {{offset.x,shelf_size.y + offset.y} , sf::Color::White, {0,shelf_size.y} };
+    rect[2] = {{shelf_size           + offset}    , sf::Color::White, {shelf_size}     };
+    rect[3] = {{shelf_size.x + offset.x, offset.y}, sf::Color::White, {shelf_size.x, 0}};
 
-    rect[3].texCoords = {0,0};
-    rect[2].texCoords = {half_size.x * 2.f,0};
-    rect[1].texCoords = half_size * 2.f;
-    rect[0].texCoords = {0,half_size.y * 2.f};
+    // rect[3].texCoords = {0,0};
+    // rect[2].texCoords = {half_size.x * 2.f,0};
+    // rect[1].texCoords = half_size * 2.f;
+    // rect[0].texCoords = {0,half_size.y * 2.f};
 
     window.draw(rect, sf::RenderStates{&shelf.getTexture()});
 }
