@@ -143,7 +143,7 @@ void draw_shelf_items(sf::RenderWindow& window) {
     // {10.f,10.f}, sf::Vector2f{size.x - 20.f,100.f}
 
     const auto shelf_size = sf::Vector2f{size.x - 40.f,80.f};
-    const unsigned shelf_length = 2000;
+    const unsigned shelf_length = 1000;
 
     const sf::Vector2f element_size{80,80};
     const float eleme_rad = 20.f;
@@ -169,14 +169,14 @@ void draw_shelf_items(sf::RenderWindow& window) {
 
 
     sf::RenderTexture shelf{(sf::Vector2u)shelf_size + sf::Vector2u{shelf_length,0}};
-    sf::View view;
     shelf.clear(sf::Color{200,200,200});
     sf::VertexArray rect{sf::PrimitiveType::TriangleFan, 4};
     // setting view
     //                         offset    this should move the screen      
-    const auto center = sf::Vector2f{shelf_length * (Glob::zoom_scalar / 255.f),0} + shelf_size * 0.5f;
-    view.setCenter(center);
-    view.setSize(shelf_size);
+    const auto view_origin = sf::Vector2f{shelf_length * (Glob::zoom_scalar / 255.f),0};// + shelf_size * 0.5f;
+    sf::View view{sf::FloatRect{view_origin, shelf_size}};
+    // view.setCenter(center);
+    // view.setSize(shelf_size);
     shelf.setView(view);
 
     
@@ -187,16 +187,16 @@ void draw_shelf_items(sf::RenderWindow& window) {
     // rect[2] = {element_size       , sf::Color::White, element_size       };
     // rect[3] = {{element_size.x, 0}, sf::Color::White, {element_size.x, 0}};
     MEU::GLShapes::set_rect(rect, {}, element_size, sf::Color::White);
-    shelf.draw(rect); //, sf::RenderStates(&item_rounded_rect_shader));
+    shelf.draw(rect, sf::RenderStates(&item_rounded_rect_shader));
     // 2
     //                                   offset
-    sf::Vector2f offset = {element_size.x + 10,0};
+    sf::Vector2f offset = {element_size.x + 5,0};
     // rect[0] = {sf::Vector2f{0,0}               + offset, sf::Color::Red, sf::Vector2f{0,0}              };
     // rect[1] = {sf::Vector2f{0,element_size.y}  + offset, sf::Color::Red, sf::Vector2f{0,element_size.y} };
     // rect[2] = {element_size                    + offset, sf::Color::Red, element_size                   };
     // rect[3] = {sf::Vector2f{element_size.x, 0} + offset, sf::Color::Red, sf::Vector2f{element_size.x, 0}};
     MEU::GLShapes::set_rect(rect, offset, element_size, sf::Color::Red);
-    shelf.draw(rect); //, sf::RenderStates(&item_rounded_rect_shader));
+    shelf.draw(rect, sf::RenderStates(&item_rounded_rect_shader));
 
 
     // drawing the shelf to the window
