@@ -173,11 +173,10 @@ void draw_shelf_items(sf::RenderWindow& window) {
     sf::VertexArray rect{sf::PrimitiveType::TriangleFan, 4};
     // setting view
     //                         offset    this should move the screen      
-    const auto view_origin = sf::Vector2f{shelf_length * (Glob::zoom_scalar / 255.f),0};// + shelf_size * 0.5f;
-    sf::View view{sf::FloatRect{view_origin, shelf_size}};
+    // sf::View view{sf::FloatRect{view_origin, shelf_size}};
     // view.setCenter(center);
     // view.setSize(shelf_size);
-    shelf.setView(view);
+    // shelf.setView(view);
 
     
     // modes
@@ -204,10 +203,12 @@ void draw_shelf_items(sf::RenderWindow& window) {
     // MEU::GLShapes::set_rect(rect, {20,20}, half_size * 2.f);
     //
     offset = {20,20};
-    rect[0] = {{offset}                           , sf::Color::White, {}               };
-    rect[1] = {{offset.x,shelf_size.y + offset.y} , sf::Color::White, {0,shelf_size.y} };
-    rect[2] = {{shelf_size           + offset}    , sf::Color::White, {shelf_size}     };
-    rect[3] = {{shelf_size.x + offset.x, offset.y}, sf::Color::White, {shelf_size.x, 0}};
+    
+    const auto texture_offset = sf::Vector2f{shelf_length * (view_percent / 255.f),0};// + shelf_size * 0.5f;
+    rect[0] = {{offset}                           , sf::Color::White, {texture_offset}                                   };
+    rect[1] = {{offset.x,shelf_size.y + offset.y} , sf::Color::White, {texture_offset.x, shelf_size.y + texture_offset.y}};
+    rect[2] = {{shelf_size           + offset}    , sf::Color::White, {shelf_size + texture_offset}                      };
+    rect[3] = {{shelf_size.x + offset.x, offset.y}, sf::Color::White, {shelf_size.x + texture_offset.x, texture_offset.y}};
 
     // rect[3].texCoords = {0,0};
     // rect[2].texCoords = {half_size.x * 2.f,0};
