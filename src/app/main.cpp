@@ -1,4 +1,3 @@
-#include <cmath>
 #include <unistd.h>
 // #include <iostream>
 #include <sys/stat.h>
@@ -22,12 +21,9 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include "config.hpp"
-#include "util/time.hpp"
 #include "app/event.hpp"
 #include "ui/shapes/basicShape.hpp"
 #include "app/interface/scene/scene.hpp"
-
-Time Time;
 
 
 int main() {
@@ -53,5 +49,6 @@ int main() {
         }
     }
     return 0;
+    const char* d = ("24");
 }
 
