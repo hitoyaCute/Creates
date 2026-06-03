@@ -321,7 +321,6 @@ void draw_main(sf::RenderWindow& window) {
 
     {
         auto gate_vertex = sf::VertexArray{sf::PrimitiveType::Triangles};
-        gate_vertex.resize(50);
         // TODO:
         // add ways to make this load specific texture for
         // each gate and each circuit type
