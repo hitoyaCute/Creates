@@ -6,6 +6,7 @@
 using sf::Keyboard::Scan;
 
 void process_event(sf::RenderWindow &win) {
+    Glob::zoom_delta = 0;
     while (const auto event = win.pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
             win.close();
@@ -14,14 +15,7 @@ void process_event(sf::RenderWindow &win) {
                 win.close();
             }
         } else if(const auto wheel = event->getIf<sf::Event::MouseWheelScrolled>()) {
-            float temp = wheel->delta * 2;
-            if (temp+(float)Glob::zoom_scalar > 255) {
-                Glob::zoom_scalar = 255;
-            } else if (temp+(float)Glob::zoom_scalar <= 0) {
-                Glob::zoom_scalar = 0;
-            } else {
-                Glob::zoom_scalar = temp+(float)Glob::zoom_scalar;
-            }
+            Glob::zoom_delta += wheel->delta;
         }
     }
 }

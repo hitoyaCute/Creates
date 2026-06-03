@@ -48,8 +48,8 @@ set(SFML_LIBS SFML::Graphics SFML::Window SFML::System)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SFML_LIBS})
 
 
-# set debug symbols and optimization level with warnings and c++20 standard
-target_compile_options(${PROJECT_NAME} PRIVATE -g -O1 -Wall -std=c++23)
+# set debug symbols and optimization level with warnings
+target_compile_options(${PROJECT_NAME} PRIVATE -g -O1 -Wall -Wextra -std=c++23)
 
 # include headers sources
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -60,10 +60,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     RES_DIR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res/")
 
-# copy assets to output directory
 add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD                # specify the target and when to execute the command
-    COMMAND ${CMAKE_COMMAND} -E copy_directory       # copy command
-    "${CMAKE_SOURCE_DIR}/res"                        # source directory
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/res")         # destination directory
-
+    TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/bin
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/bin/res
+)

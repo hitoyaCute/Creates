@@ -9,7 +9,7 @@ void load_main(sf::RenderWindow& window);
 
 
 void draw_intro(sf::RenderWindow& window);
-
+// double tap to open file
 
 
 inline void display_scene(sf::RenderWindow &window, int scene = 1) {

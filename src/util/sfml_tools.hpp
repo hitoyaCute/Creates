@@ -27,8 +27,10 @@ constexpr sf::Transform get_world_transform(const sf::Vector2f& focus_point, con
 
 // position trasform
 // can be used to get mouse position from render to world
-constexpr sf::Vector2f current_to_localpos(const sf::Vector2f& pos, const sf::Vector2f& current_size, const sf::Vector2f& focus_point, const float& zoom) {
+constexpr sf::Vector2f current_to_viewportpos(const sf::Vector2f& pos, const sf::Vector2f& current_size, const sf::Vector2f& focus_point, const float& zoom) {
     return get_world_transform(focus_point, current_size, zoom).getInverse().transformPoint(pos);
 }
+
+
 
 }; // namespace sfml_utils
