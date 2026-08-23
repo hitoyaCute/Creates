@@ -12,5 +12,5 @@ every physical nodes can connect into any
 other physical node
 
 sample
-![video](./sample.mp4)
+![video](https://github.com/hitoyaCute/Creates/raw/refs/heads/master/sample.mp4)
 
