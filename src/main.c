@@ -2,7 +2,6 @@
 #define CLAY_IMPLEMENTATION
 #include <clay.h>
 #include <clay/renderers/raylib/clay_renderer_raylib.c>
-#include <raygui.h>
 #include <raylib.h>
 #include <renderers/raylib/raylib.h>
 #include <stdint.h>
@@ -63,34 +62,32 @@ int main() {
 			GetFrameTime());
 
 		Clay_BeginLayout();
-		{
-			// draw here and only here
+		// draw here and only here
+		CLAY({
+			.id = CLAY_ID("window"),
+			.backgroundColor = {43, 41, 51, 255},
+			.layout =
+				{
+					.layoutDirection = CLAY_TOP_TO_BOTTOM,
+					.sizing = max_size,
+					.padding = {16, 16, 16, 16},
+					.childGap = 16,
+				},
+		}) {
 			CLAY({
-				.id = CLAY_ID("window"),
-				.backgroundColor = {43, 41, 51, 255},
-				.layout =
-					{
-						.layoutDirection = CLAY_TOP_TO_BOTTOM,
-						.sizing = max_size,
-						.padding = {16, 16, 16, 16},
-						.childGap = 16,
-					},
-			}) {
-				CLAY({
-					.id = CLAY_ID("top_bar"),
-					.backgroundColor = {200, 200, 200, 255},
-					.cornerRadius = CLAY_CORNER_RADIUS(25),
-					.layout = {.sizing = {CLAY_SIZING_GROW(),
-										  CLAY_SIZING_FIXED(100)}},
-				}) {}
-				CLAY({
-					.id = CLAY_ID("main_body"),
-					.backgroundColor = {200, 200, 200, 255},
-					.cornerRadius = CLAY_CORNER_RADIUS(25),
-					.border = {COLOR_WHITE,{10,10,10,10,0}},
-					.layout = {.sizing = max_size},
-				}) {}
-			}
+				.id = CLAY_ID("top_bar"),
+				.backgroundColor = {200, 200, 200, 255},
+				.cornerRadius = CLAY_CORNER_RADIUS(25),
+				.layout = {.sizing = {CLAY_SIZING_GROW(),
+									  CLAY_SIZING_FIXED(100)}},
+			}) {}
+			CLAY({
+				.id = CLAY_ID("main_body"),
+				.backgroundColor = {200, 200, 200, 255},
+				.cornerRadius = CLAY_CORNER_RADIUS(25),
+				.border = {COLOR_WHITE, {10, 10, 10, 10, 0}},
+				.layout = {.sizing = max_size},
+			}) {}
 		}
 		Clay_RenderCommandArray renderCommand = Clay_EndLayout();
 
