@@ -13,9 +13,9 @@ title screen      - not started
 - gcc      >=15.2
 - GNU make >=4.4.1
 - git      >=2.53.0
+- bear     >=3.16
 
 # supported platforms
-- Windows 10,11
 - linux at x11 or wayland follow [raylib Working on GNU linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
 
 # build
