@@ -1,4 +1,3 @@
-
 #define RAYGUI_IMPLEMENTATION
 #define CLAY_IMPLEMENTATION
 #include <clay.h>
