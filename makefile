@@ -1,69 +1,59 @@
-CC            = gcc
-TARGET        = Creates
-SRC_DIR       = src
-BUILD_DIR     = build
-LIB_DIR       = lib
+CC       ?= gcc
+TARGET    = Creates
+SRC_DIR   = src
+BUILD_DIR = build
 
-SRC           = $(wildcard $(SRC_DIR)/*.c)
-OBJ           = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
-DEP           = $(OBJ:.o=.d)
+SRC = $(SRC_DIR)/main.c
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEP = $(OBJ:.o=.d)
 
-RAYLIB_VER    = 6.2
-RAYLIB_DIR    = vendor/raylib
-RAYLIB_SRC    = $(RAYLIB_DIR)/src
-RAYLIB_LIB    = $(RAYLIB_SRC)/libraylib.a
-RAYGUI_H      = $(LIB_DIR)/raygui.h
+VENDOR     = vendor
 
-INC_DIRS      = $(LIB_DIR) $(SRC_DIR)
-SYS_INC_DIRS  = $(RAYLIB_SRC) $(LIB_DIR)
-INCLUDES      = $(addprefix -I,$(INC_DIRS)) $(addprefix -isystem ,$(SYS_INC_DIRS))
+RAYLIB_VER = 6.2
+RAYLIB_DIR = $(VENDOR)/raylib
+RAYLIB_SRC = $(RAYLIB_DIR)/src
+RAYLIB_H   = $(RAYLIB_SRC)/raylib.h
+RAYLIB_LIB = $(RAYLIB_SRC)/libraylib.a
+# override with: make GRAPHICS=GRAPHICS_API_OPENGL_33
+GRAPHICS  ?= GRAPHICS_API_OPENGL_21
 
-CFLAGS        = -Wall -Wextra -std=c99 -O2 -MMD -MP $(INCLUDES)
+CLAY_VER   = v0.14
+CLAY_DIR   = $(VENDOR)/clay
+CLAY_H     = $(CLAY_DIR)/clay.h
 
-COMPDB        = compile_commands.json
+VENDOR_HDRS = $(RAYLIB_H) $(RAYGUI_H) $(CLAY_H)
 
-ifeq ($(OS),Windows_NT)
-    TARGET   := $(TARGET).exe
-    LDFLAGS   = -L$(RAYLIB_SRC) -lraylib -lopengl32 -lgdi32 -lwinmm
-else
-    LDFLAGS   = -L$(RAYLIB_SRC) -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-endif
+# project headers via -I, third-party via -isystem (no warnings from them)
+INCLUDES = -I$(SRC_DIR)           \
+           -isystem $(RAYLIB_SRC) \
+	   -isystem $(CLAY_DIR)   \
+           -isystem $(VENDOR)
+
+CFLAGS  ?= -O2 -g
+CFLAGS  += -Wall -Wextra -std=c23 -MD -MP $(INCLUDES)
+LDLIBS   = -lGL -lm -lpthread -ldl -lrt -lX11
+
+.DELETE_ON_ERROR:
+.PHONY: all run clean distclean
 
 all: $(TARGET)
 
-# generate compile_commands
-$(COMPDB): $(SRC) makefile
-	@echo "[" > $@
-	@first=1; for f in $(SRC); do \
-	  if [ $$first -eq 0 ]; then echo "," >> $@; fi; first=0; \
-	  printf '  {"directory": "%s", "command": "$(CC) $(CFLAGS) -c %s", "file": "%s"}' "$(CURDIR)" "$$f" "$$f" >> $@; \
-	done
-	@echo "" >> $@
-	@echo "]" >> $@
-
-compdb: $(COMPDB)
-
-# download raylib
-$(RAYLIB_SRC)/raylib.h:
+# ---- fetch dependencies ----
+$(RAYLIB_H):
 	git clone --depth 1 --branch $(RAYLIB_VER) https://github.com/raysan5/raylib.git $(RAYLIB_DIR)
 
-# download raygui
-$(RAYGUI_H):
-	mkdir -p $(LIB_DIR)
-	curl -L -o $@ https://raw.githubusercontent.com/raysan5/raygui/master/src/raygui.h
+$(CLAY_H):
+	git clone --depth 1 --branch $(CLAY_VER) https://github.com/nicbarker/clay.git $(CLAY_DIR)
 
-# build raylib static
-$(RAYLIB_LIB): $(RAYLIB_SRC)/raylib.h
-	$(MAKE) -C $(RAYLIB_SRC) PLATFORM=PLATFORM_DESKTOP
+$(RAYLIB_LIB): $(RAYLIB_H)
+	$(MAKE) -C $(RAYLIB_SRC) PLATFORM=PLATFORM_DESKTOP GRAPHICS=$(GRAPHICS)
 
-# compile
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(RAYLIB_SRC)/raylib.h $(RAYGUI_H)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(VENDOR_HDRS)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	bear -- $(CC) $(CFLAGS) -c $< -o $@
 
-# link
 $(TARGET): $(OBJ) $(RAYLIB_LIB)
-	$(CC) $(OBJ) -o $@ $(LDFLAGS)
+	$(CC) $(OBJ) $(RAYLIB_LIB) -o $@ $(LDLIBS)
 
 run: $(TARGET)
 	./$(TARGET)
@@ -72,9 +62,6 @@ clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
 
 distclean: clean
-	rm -rf vendor $(LIB_DIR)
+	rm -rf $(VENDOR) compile_commands.json
 
 -include $(DEP)
-
-.PHONY: all run clean distclean compdb
-
