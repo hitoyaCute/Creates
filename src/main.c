@@ -1,3 +1,4 @@
+#include "layouts.h"
 #define RAYGUI_IMPLEMENTATION
 #define CLAY_IMPLEMENTATION
 #include <clay.h>
@@ -7,6 +8,8 @@
 #include <stdint.h>
 
 const int FONT_ID_BODY_16 = 0;
+#define max_size                                                               \
+	(Clay_Sizing) { CLAY_SIZING_GROW(), CLAY_SIZING_GROW() }
 #define COLOR_WHITE {255, 255, 255, 255}
 
 void RenderHeaderButton(Clay_String text) {
@@ -21,7 +24,6 @@ void RenderHeaderButton(Clay_String text) {
 	}
 }
 
-const Clay_Sizing max_size = {CLAY_SIZING_GROW(), CLAY_SIZING_GROW()};
 int main() {
 	Clay_Raylib_Initialize(0, 0, "Clay - Raylib Renderer Example",
 						   FLAG_MSAA_4X_HINT | FLAG_FULLSCREEN_MODE |
@@ -44,9 +46,9 @@ int main() {
 
 	// seting up blur to give basic AA
 	const float renderScale = 1.5;
-	RenderTexture2D frameBuffer = LoadRenderTexture(
+	RenderTexture2D frame_buffer = LoadRenderTexture(
 		GetScreenWidth() * renderScale, GetScreenHeight() * renderScale);
-	SetTextureFilter(frameBuffer.texture, TEXTURE_FILTER_BILINEAR);
+	SetTextureFilter(frame_buffer.texture, TEXTURE_FILTER_BILINEAR);
 	Camera2D camera = {.zoom = renderScale};
 
 	while (!WindowShouldClose()) {
@@ -61,41 +63,14 @@ int main() {
 			1, (Clay_Vector2){scrolldt.x * 2.f, scrolldt.y * 2.f},
 			GetFrameTime());
 
-		Clay_BeginLayout();
-		// draw here and only here
-		CLAY({
-			.id = CLAY_ID("window"),
-			.backgroundColor = {43, 41, 51, 255},
-			.layout =
-				{
-					.layoutDirection = CLAY_TOP_TO_BOTTOM,
-					.sizing = max_size,
-					.padding = {16, 16, 16, 16},
-					.childGap = 16,
-				},
-		}) {
-			CLAY({
-				.id = CLAY_ID("top_bar"),
-				.backgroundColor = {200, 200, 200, 255},
-				.cornerRadius = CLAY_CORNER_RADIUS(25),
-				.layout = {.sizing = {CLAY_SIZING_GROW(),
-									  CLAY_SIZING_FIXED(100)}},
-			}) {}
-			CLAY({
-				.id = CLAY_ID("main_body"),
-				.backgroundColor = {200, 200, 200, 255},
-				.cornerRadius = CLAY_CORNER_RADIUS(25),
-				.border = {COLOR_WHITE, {10, 10, 10, 10, 0}},
-				.layout = {.sizing = max_size},
-			}) {}
-		}
-		Clay_RenderCommandArray renderCommand = Clay_EndLayout();
+		// draw the main window
+		Clay_RenderCommandArray render_command = draw_main_window();
 
-		BeginTextureMode(frameBuffer);
+		BeginTextureMode(frame_buffer);
 		BeginMode2D(camera);
 		// execute clay commands
 		ClearBackground(BLACK);
-		Clay_Raylib_Render(renderCommand, fonts);
+		Clay_Raylib_Render(render_command, fonts);
 		EndMode2D();
 		EndTextureMode();
 
@@ -104,9 +79,9 @@ int main() {
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		// ClearBackground(BLACK);
 
-		DrawTexturePro(frameBuffer.texture,
-					   (Rectangle){0, 0, frameBuffer.texture.width,
-								   -frameBuffer.texture.height},
+		DrawTexturePro(frame_buffer.texture,
+					   (Rectangle){0, 0, frame_buffer.texture.width,
+								   -frame_buffer.texture.height},
 					   (Rectangle){0, 0, GetScreenWidth(), GetScreenHeight()},
 					   (Vector2){0, 0}, 0.0f, WHITE);
 		// end the frame and get ready for the next one  (display frame, poll
@@ -116,7 +91,7 @@ int main() {
 
 	// cleanup
 	// unload our texture so it can be cleaned up
-	UnloadRenderTexture(frameBuffer);
+	UnloadRenderTexture(frame_buffer);
 
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();

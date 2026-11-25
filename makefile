@@ -3,7 +3,8 @@ TARGET    = Creates
 SRC_DIR   = src
 BUILD_DIR = build
 
-SRC = $(SRC_DIR)/main.c
+SRC = $(SRC_DIR)/main.c \
+      $(SRC_DIR)/main_structure.c
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEP = $(OBJ:.o=.d)
 
